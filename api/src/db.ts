@@ -1,15 +1,16 @@
-import * as mongoose from 'mongoose'
+import * as     mongoose            from 'mongoose'
+import * as     dotenv              from 'dotenv'
 
 export default class Db {
     public mongoose: mongoose.Connection
 
     constructor() {
-        this.productionCheck()
+        this.initEnvVariables()
         this.connect()
     }
 
-    private productionCheck(): void {
-        require('dotenv').config({path:'env_variables.env'})
+    private initEnvVariables(): void {
+        dotenv.config({ path: 'env_variables.env' })
     }
 
     private connect(): void {

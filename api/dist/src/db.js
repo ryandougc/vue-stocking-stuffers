@@ -1,13 +1,14 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose = require("mongoose");
+const dotenv = require("dotenv");
 class Db {
     constructor() {
-        this.productionCheck();
+        this.initEnvVariables();
         this.connect();
     }
-    productionCheck() {
-        require('dotenv').config({ path: 'env_variables.env' });
+    initEnvVariables() {
+        dotenv.config({ path: 'env_variables.env' });
     }
     connect() {
         mongoose.connect(process.env.DB_CONNECTION, {

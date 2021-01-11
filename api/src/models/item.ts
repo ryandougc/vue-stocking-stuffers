@@ -1,12 +1,12 @@
-import * as mongoose from 'mongoose'
+import * as     mongoose            from 'mongoose'
 
-export const Kitten = mongoose.model('Kitten',
+export const Item = mongoose.model('Item',
     new mongoose.Schema({
         name: {
             type: String,
             required: true,
             minLength: [2, "Name must be 2 characters or more"],
-            maxLength: [30, "Name must be 30 characters or less"]
+            maxLength: [30, "Name must be 30 characters or less"],
         }
     })
 )

@@ -1,1 +1,2 @@
 DB_CONNECTION=put database uri here
+SESSION_SECRET=
