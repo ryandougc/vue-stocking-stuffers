@@ -1,18 +1,37 @@
 <template>
 <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <Item />
+    <Table :columns="columns" :data="data"/>
 </div>
 </template>
 
 <script>
-import Item from './views/Item'
+import axios from 'axios'
+import Table from './views/Table'
 
 export default {
-  name: 'App',
-  components: {
-      Item
-  }
+    name: 'App',
+    components: {
+        Table
+    },
+    data() {
+        return {
+            data: []
+        }
+    },
+    created() {
+        axios.get('http://localhost:3000/item')
+            .then( response => {
+                response.data.forEach( item => {
+                    this.data.push({
+                        name: item.name,
+                        power: item.name.charAt(3)
+                    })
+                })
+
+                this.data[2].test = "test"
+            })
+            .catch( err => { console.log(err) })
+    }
 }
 </script>
 
