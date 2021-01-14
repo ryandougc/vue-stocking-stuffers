@@ -8,13 +8,14 @@ exports.validate = [
         .notEmpty().withMessage("Name field cannot be empty")
         .isLength({ min: 2, max: 20 }).withMessage("Name must be 2 - 30 characters long")
 ];
-const checkErrors = (req, res) => {
+const checkErrors = (req, res, next) => {
     const errors = express_validator_1.validationResult(req);
     if (!errors.isEmpty()) {
         return res
             .status(500)
             .send(errors.array());
     }
+    next();
 };
 exports.checkErrors = checkErrors;
 //# sourceMappingURL=itemValidator.js.map

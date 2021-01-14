@@ -7,12 +7,14 @@ export const validate = [
     .isLength({min:2, max: 20}).withMessage("Name must be 2 - 30 characters long")
 ]
 
-export const checkErrors = (req, res): void => {
+export const checkErrors = (req, res, next) => {
     const errors = validationResult(req)
 
-        if(!errors.isEmpty()) {
-            return res
-                .status(500)
-                .send(errors.array())
-        }
+    if(!errors.isEmpty()) {
+        return res
+            .status(500)
+            .send(errors.array())
+    }
+
+    next()
 }

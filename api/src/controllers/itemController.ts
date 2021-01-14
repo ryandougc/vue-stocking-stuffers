@@ -1,6 +1,6 @@
-import          Db                  from '../db'
-import          { Item }            from '../models/item'
-import          { validate, checkErrors }            from '../validators/itemValidator'
+import          Db                          from '../db'
+import          { Item }                    from '../models/item'
+import          { validate, checkErrors }   from '../validators/itemValidator'
 
 new Db()
 
@@ -19,7 +19,6 @@ export const post_item = [
     validate,
     checkErrors,
     async (req, res): Promise<void> => {
-
         const new_item = new Item({ name: req.body.name })
 
         try {
