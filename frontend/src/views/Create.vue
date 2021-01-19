@@ -93,7 +93,7 @@ export default {
             }
 
             if(this.errors.length === 0)  {
-                axios.post('http://localhost:3000/item', {
+                axios.post(`${process.env.VUE_APP_LOCAL_API}item`, {
                     name: this.name
                 })
                 .then(response => {

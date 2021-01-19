@@ -19,7 +19,7 @@ name: 'Home',
         }
     },
     created() {
-        axios.get('http://localhost:3000/item')
+        axios.get(`${process.env.VUE_APP_LOCAL_API}item`)
             .then( response => {
                 response.data.forEach( item => {
                     this.data.push({
