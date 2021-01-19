@@ -17,20 +17,25 @@
                         <div class="table-header-content" @click="sort(column)">
                             <p>{{ capitalize(column) }}</p>
                             <div class="icon" :id="column">
-                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"></path>'
+                                <svg fill="none" stroke="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"></path>
                                 </svg>
                             </div>
                         </div>
                     </th>
+                    <th></th>
                 </tr>
             </thead>
-            <tbody>
-                <tr v-for="(row, index) in filteredRows" :key="`row-${index}`">
-                    <td v-for="(cell, jindex) in row" :key="`row-${jindex}`">
-                        <p>{{ cell }}</p>
-                    </td>
-                </tr>
+            <tbody :key="itemRow">
+                <transition-group name="list">
+                    <tr v-for="(row, index) in filteredData" :key="`row-${index}`" :id="row.id">
+                        <td>{{ row.name }}</td>
+                        <td>{{ row.power }}</td>
+                        <td>
+                            <svg @click="deleteItem(row.id)" fill="none" stroke="currentColor" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                        </td>
+                    </tr>
+                </transition-group>
             </tbody>
         </table>
 
@@ -42,7 +47,9 @@
     </div>
 </template>
 
-<script >
+<script>
+import axios from 'axios'
+
 export default {
     name: 'Table',
     props: {
@@ -55,32 +62,11 @@ export default {
             page: 1,
             sortDirection: 0,
             sortColumn: null,
+            itemRow: 0,
+            show: true
         }
     },
     computed: {
-        columns() {
-            let columnNames = []
-            let num = 0
-
-            this.sortedData.forEach(row => {
-                let numOfProps = 0
-                let propertyNames = []
-
-                for(let property in row){
-                    numOfProps++
-
-                    propertyNames.push(property)
-                }
-
-                if(numOfProps > num) {
-                    num = numOfProps
-
-                    columnNames = [... propertyNames]
-                }
-            })
-
-            return columnNames
-        },
         sortedData() {
             this.data.forEach(row => {
                 for(let property in row){
@@ -92,21 +78,17 @@ export default {
 
             return this.data
         },
-        limitTable() {
-            if(this.itemLimit === "20") return 20
-
-            if(this.itemLimit === "30") return 30
-
-            return 10
-        },
-        filteredRows() {
+        filteredData() {
             const filteredTable = this.sortedData.filter(row => {
+
                 const searchTerm = this.searchQuery.toLowerCase()
                 const properties = []
                 let result = null
 
                 for(let property in row){
-                    properties.push(row[property].toString().toLowerCase())
+                    if(property !== 'id') {
+                        properties.push(row[property].toString().toLowerCase())
+                    }
                 }
 
                 properties.forEach(prop => {
@@ -115,7 +97,7 @@ export default {
 
                 // Fill in empty data with a dash
                 this.columns.forEach(column => {
-                    if(!row[column]) row[column] = "-"
+                    if(!row[column] || row[column] == null) row[column] = "-"
                 })
 
                 return result
@@ -123,11 +105,46 @@ export default {
 
             return filteredTable.slice(this.itemMin, this.itemMax)
         },
+        columns() {
+            let columnNames = []
+            let num = 0
+
+            this.sortedData.forEach(row => {
+                let numOfProps = 0
+                let propertyNames = []
+
+                for(let property in row){
+                    if(property !== "id") {
+                        numOfProps++
+
+                        propertyNames.push(property)
+                    }
+                }
+
+                if(numOfProps > num) {
+                    num = numOfProps
+
+                    columnNames = [... propertyNames]
+                }
+            })
+
+            return columnNames
+        },
+        tableData() {
+            return this.filteredData.slice(this.itemMin, this.itemMax)
+        },
+        limitTable() {
+            if(this.itemLimit === "20") return 20
+
+            if(this.itemLimit === "30") return 30
+
+            return 10
+        },
         itemMax() {
             let max = this.limitTable * this.page
 
-            if(max > this.data.length) {
-                max = this.data.length
+            if(max > this.sortedData.length) {
+                max = this.sortedData.length
             }
 
             return max
@@ -174,20 +191,20 @@ export default {
                 this.sortColumn = index
                 this.sortDirection = 1
             }
+
             // Handle sort icons
             let sortIcons = document.querySelectorAll('.icon')
+            // Set all icons to the unsorted Icon
             sortIcons.forEach(icon => {
                 icon.innerHTML = '<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"></path></svg>'
             })
 
             if(this.sortDirection === 1) {
-                document.getElementById(this.sortColumn).innerHTML = `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4h13M3 8h9m-9 4h6m4 0l4-4m0 0l4 4m-4-4v12"></path>
-                            </svg>`
+                // Icon for sort in ascending direction
+                document.getElementById(this.sortColumn).innerHTML = `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4h13M3 8h9m-9 4h6m4 0l4-4m0 0l4 4m-4-4v12"></path></svg>`
             }else if(this.sortDirection === -1) {
-                document.getElementById(this.sortColumn).innerHTML = `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4h13M3 8h9m-9 4h9m5-4v12m0 0l-4-4m4 4l4-4"></path>
-                            </svg>`
+                // Icon for sort in descending direction
+                document.getElementById(this.sortColumn).innerHTML = `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4h13M3 8h9m-9 4h9m5-4v12m0 0l-4-4m4 4l4-4"></path></svg>`
             }
 
             // Sort
@@ -207,42 +224,44 @@ export default {
                     return -1
                 }
             })
+        },
+        deleteItem(item) {
+            axios
+                .delete(`http://localhost:3000/item/${item}`)
+                .then(response => {
+                    if(response.status === 200){
+                        this.sortedData.forEach((row, index) => {
+                            if(row.id === item){
+                                this.sortedData.splice(index, 1)
+                            }
+                        })
+                    }
+                })
+                .catch(console.log)
         }
     },
     watch: {
         itemLimit () {
             this.page = 1
         }
-    },
+    }
 }
 </script>
 
 <style scoped>
-* {
-    margin: 0;
-    padding: 0;
-    font-size: 0.985em;
-
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-
-    --input-group-spacing: 10px;
-    --input-height: 35px;
-    --input-width-small: 85px;
-    --input-border: 1px solid lightgray;
-    --input-border-radius: 3px;
+.list-enter-active,
+.list-leave-active {
+    transition: all 0.3s ease;
 }
+
+.list-enter-from,
+.list-leave-to {
+    opacity: 0;
+    transform: translateX(30px);
+}
+
 svg{
     cursor: pointer;
-}
-.input {
-    -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
-    -moz-box-sizing: border-box;    /* Firefox, other Gecko */
-    box-sizing: border-box;         /* Opera/IE 8+ */
-
-    height: var(--input-height);
-    background-color: #FFF;
-    border: var(--input-border);
-    border-radius: var(--input-border-radius);
 }
 
 #table-filters {
@@ -287,10 +306,15 @@ svg{
 }
 #table tbody {
     border: var(--input-border);
+    text-align: center;
+}
+#table tbody svg{
+    width: 25px;
+    height: 25px;
 }
 #table tbody tr td {
     padding: 10px 35px 10px 35px;
-    display:table-cell;
+    display: table-cell;
 }
 #table tbody tr:not(:last-of-type) {
     border-bottom: var(--input-border);

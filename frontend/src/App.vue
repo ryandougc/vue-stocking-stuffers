@@ -1,47 +1,58 @@
 <template>
-<div id="app">
-    <Table :columns="columns" :data="data"/>
-</div>
+    <div id="app">
+        <div id="nav">
+            <router-link to="/">Home</router-link> |
+            <router-link to="/create">Add Item</router-link>
+        </div>
+
+        <router-view/>
+    </div>
+
 </template>
 
-<script>
-import axios from 'axios'
-import Table from './views/Table'
-
-export default {
-    name: 'App',
-    components: {
-        Table
-    },
-    data() {
-        return {
-            data: []
-        }
-    },
-    created() {
-        axios.get('http://localhost:3000/item')
-            .then( response => {
-                response.data.forEach( item => {
-                    this.data.push({
-                        name: item.name,
-                        power: item.name.charAt(3)
-                    })
-                })
-
-                this.data[2].test = "test"
-            })
-            .catch( err => { console.log(err) })
-    }
-}
-</script>
-
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+* {
+    margin: 0;
+    padding: 0;
+
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-size: 0.99em;
+
+    --input-group-spacing: 10px;
+    --input-height: 35px;
+    --input-width-small: 85px;
+    --input-border: 1px solid lightgray;
+    --input-border-radius: 3px;
+}
+
+.input {
+    -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+    -moz-box-sizing: border-box;    /* Firefox, other Gecko */
+    box-sizing: border-box;         /* Opera/IE 8+ */
+
+    height: var(--input-height);
+    background-color: #FFF;
+    border: var(--input-border);
+    border-radius: var(--input-border-radius);
+}
+
+body {
+    background-color: rgb(245, 245, 245);
+}
+
+#nav {
+    text-align: center;
+    padding: 30px;
+}
+
+#nav a {
+    font-weight: bold;
+    color: #2c3e50;
+}
+
+#nav a.router-link-exact-active {
+    color: #42b983;
 }
 </style>
