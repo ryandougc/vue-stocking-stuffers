@@ -19,7 +19,11 @@ export const post_item = [
     validate,
     checkErrors,
     async (req, res): Promise<void> => {
-        const new_item = new Item({ name: req.body.name })
+        const new_item = new Item({
+            item: req.body.item,
+            quantity: req.body.quantity,
+            link: req.body.link
+        })
 
         try {
             const item = await new_item.save()
@@ -50,11 +54,13 @@ export const put_item = [
 
         const updated_item = new Item({
             _id: req.params.id,
-            name: req.body.name
+            item: req.body.item,
+            quantity: req.body.quantity,
+            link: req.body.link
         })
 
         try {
-            const item = await Item.updateOne({ _id: updated_item._id }, { name: req.body.name }, {runValidators: true})
+            const item = await Item.updateOne({ _id: updated_item._id }, updated_item, {runValidators: true})
 
             res.status(200).send(item)
         } catch(err){

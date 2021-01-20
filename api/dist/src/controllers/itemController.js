@@ -29,7 +29,11 @@ exports.post_item = [
     itemValidator_1.validate,
     itemValidator_1.checkErrors,
     (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        const new_item = new item_1.Item({ name: req.body.name });
+        const new_item = new item_1.Item({
+            item: req.body.item,
+            quantity: req.body.quantity,
+            link: req.body.link
+        });
         try {
             const item = yield new_item.save();
             res.status(200).send(item);
@@ -57,10 +61,12 @@ exports.put_item = [
     (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const updated_item = new item_1.Item({
             _id: req.params.id,
-            name: req.body.name
+            item: req.body.item,
+            quantity: req.body.quantity,
+            link: req.body.link
         });
         try {
-            const item = yield item_1.Item.updateOne({ _id: updated_item._id }, { name: req.body.name }, { runValidators: true });
+            const item = yield item_1.Item.updateOne({ _id: updated_item._id }, updated_item, { runValidators: true });
             res.status(200).send(item);
         }
         catch (err) {
