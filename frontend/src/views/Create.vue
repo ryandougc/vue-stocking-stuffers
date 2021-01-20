@@ -114,6 +114,14 @@ export default {
                 })
             }
 
+            if(this.quantity == null) {
+                this.errors.push({
+                    elem: e.target[1].id,
+                    value: e.target[1].value,
+                    message: "Quantity is required"
+                })
+            }
+
             if(this.errors.length === 0)  {
                 axios.post(`${process.env.VUE_APP_LOCAL_API}item`, {
                     item: this.item,

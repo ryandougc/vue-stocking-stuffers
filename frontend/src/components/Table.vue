@@ -29,9 +29,12 @@
             <tbody :key="itemRow">
                 <transition-group name="list">
                     <tr v-for="(row, index) in filteredData" :key="`row-${index}`" :id="row.id">
-                        <td>{{ row.item }}</td>
+                        <td>{{ parseEscaped(row.item) }}</td>
                         <td>{{ row.quantity }}</td>
-                        <td><a :href="row.link">Link</a></td>
+                        <td>
+                            <p v-if="row.link == '-'">{{ row.link }}</p>
+                            <a v-else :href="row.link">Link</a>
+                        </td>
                         <td>
                             <svg @click="deleteItem(row.id)" fill="none" stroke="#F05D5E" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                         </td>
@@ -174,6 +177,13 @@ export default {
             cleanedString = str.charAt(0).toUpperCase() + str.slice(1)
 
             return cleanedString
+        },
+        parseEscaped(str) {
+            let textarea = document.createElement('textarea')
+
+            textarea.innerHTML = str
+
+            return textarea.value
         },
         changePage(direction) {
             if( (direction < 0 && this.page > 1) || (direction > 0 && this.page < this.maxPage) ) return this.page += direction
