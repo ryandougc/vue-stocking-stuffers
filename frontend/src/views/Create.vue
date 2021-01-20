@@ -38,6 +38,7 @@ import axios from 'axios'
 import router from '../router'
 
 export default {
+    title: 'Add New Stock Stuffer ',
     data() {
         return {
             errors: [],

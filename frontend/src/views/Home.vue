@@ -9,6 +9,7 @@ import axios from 'axios'
 import Table from '../components/Table.vue'
 
 export default {
+title: 'Stocking Stuffer Ideas',
 name: 'Home',
     components: {
         Table

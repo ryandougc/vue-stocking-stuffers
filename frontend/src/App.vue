@@ -1,7 +1,7 @@
 <template>
     <div id="app">
         <div id="title">
-            <h1>Stocking Stuffer Ideas</h1>
+            <h1>🎄 Stocking Stuffer Ideas 🎁</h1>
         </div>
         <div id="nav">
             <router-link to="/">Home</router-link> |
