@@ -8,7 +8,8 @@ exports.validate = [
         .notEmpty().withMessage("Name field cannot be empty")
         .isLength({ min: 2, max: 20 }).withMessage("Name must be 2 - 30 characters long"),
     express_validator_1.body('quantity', "Quantity field is inputted incorrectly")
-        .trim().escape(),
+        .trim().escape()
+        .isNumeric(),
     express_validator_1.body('link', "Link field is inputted incorrectly")
         .trim()
         .isURL()

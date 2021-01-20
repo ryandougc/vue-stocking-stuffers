@@ -14,9 +14,9 @@
             <thead>
                 <tr>
                     <th v-for="column in columns" :key="column">
-                        <div class="table-header-content" @click="sort(column)">
+                        <div class="table-header-content">
                             <p>{{ capitalize(column) }}</p>
-                            <div class="icon" :id="column">
+                            <div v-if="column !== 'link'" class="icon" :id="column" @click="sort(column)">
                                 <svg fill="none" stroke="currentColor" xmlns="http://www.w3.org/2000/svg">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"></path>
                                 </svg>
@@ -29,10 +29,11 @@
             <tbody :key="itemRow">
                 <transition-group name="list">
                     <tr v-for="(row, index) in filteredData" :key="`row-${index}`" :id="row.id">
-                        <td>{{ row.name }}</td>
-                        <td>{{ row.power }}</td>
+                        <td>{{ row.item }}</td>
+                        <td>{{ row.quantity }}</td>
+                        <td><a :href="row.link">Link</a></td>
                         <td>
-                            <svg @click="deleteItem(row.id)" fill="none" stroke="currentColor" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                            <svg @click="deleteItem(row.id)" fill="none" stroke="#F05D5E" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                         </td>
                     </tr>
                 </transition-group>
@@ -249,6 +250,9 @@ export default {
 </script>
 
 <style scoped>
+a {
+    color: var(--dark-green);
+}
 .list-enter-active,
 .list-leave-active {
     transition: all 0.3s ease;
@@ -285,11 +289,11 @@ svg{
     border-collapse: collapse;
 }
 #table thead {
-    color: #E5E7E6;
-    background-color: #4F9D69;
+    color: var(--text-color);
+    background-color: var(--accent-green);
 }
 #table thead th {
-    padding: 14px 35px 8px 35px;
+    padding: 20px 35px 10px 35px;
 }
 #table thead th .table-header-content {
     display: flex;
@@ -313,6 +317,7 @@ svg{
     height: 25px;
 }
 #table tbody tr td {
+    color: var(--text-color);
     padding: 10px 35px 10px 35px;
     display: table-cell;
 }

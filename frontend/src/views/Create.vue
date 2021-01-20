@@ -2,22 +2,33 @@
     <div id="create">
         <form action="" method="POST" @submit=validate>
             <div class="input-group">
-                <label for="name-input">Name</label>
-                <input type="text" name="name" id="name-input" class="input" v-model="name" >
+                <label for="item-input">Item</label>
+                <input type="text" name="item" id="item-input" class="input" v-model="item" >
                 <p v-for="(error, index) in errors" :key="index" class="input-error" >
-                    <span v-if="error.elem == 'name-input'">{{ error.message }}</span>
+                    <span v-if="error.elem == 'item-input'">{{ error.message }}</span>
                 </p>
             </div>
 
             <div class="input-group">
-                <label for="power-input">Power</label>
-                <input type="text" name="power" id="power-input" class="input" v-model="power" >
+                <label for="quantity-input">Quantity</label>
+                <input type="number" name="quantity" id="quantity-input" class="input" v-model.number="quantity" >
                 <p v-for="(error, index) in errors" :key="index" class="input-error" >
-                    <span v-if="error.elem == 'power-input'">{{ error.message }}</span>
+                    <span v-if="error.elem == 'quantity-input'">{{ error.message }}</span>
                 </p>
             </div>
 
-            <button type="submit" class="input" >Submit</button>
+            <div class="input-group">
+                <label for="link-input">Link</label>
+                <input type="text" name="link" id="link-input" class="input" v-model="link" >
+                <p v-for="(error, index) in errors" :key="index" class="input-error" >
+                    <span v-if="error.elem == 'link-input'">{{ error.message }}</span>
+                </p>
+            </div>
+
+            <button type="submit" class="input" id="submit-button">Submit</button>
+            <p v-for="(error, index) in errors" :key="index" class="input-error" >
+                <span v-if="error.elem == 'submit-button'">{{ error.message }}</span>
+            </p>
         </form>
     </div>
 </template>
@@ -30,28 +41,39 @@ export default {
     data() {
         return {
             errors: [],
-            name: "",
-            power: "",
+            item: "",
+            quantity: null,
+            link: "",
             debounce: []
         }
     },
     watch: {
-        name(value) {
-            value;
-            document.getElementById("name-input").classList.remove('error')
+        item(value) {
+            value
+            document.getElementById("item-input").classList.remove('error')
 
             this.errors.forEach((error, index) => {
-                if(error.elem === "name-input") {
+                if(error.elem === "item-input") {
                     this.errors.splice(index, ++index)
                 }
             })
         },
-        power(value) {
-            value;
-            document.getElementById("power-input").classList.remove('error')
+        quantity(value) {
+            value
+            document.getElementById("quantity-input").classList.remove('error')
 
             this.errors.forEach((error, index) => {
-                if(error.elem === "power-input") {
+                if(error.elem === "quantity-input") {
+                    this.errors.splice(index, ++index)
+                }
+            })
+        },
+        link(value) {
+            value
+            document.getElementById("link-input").classList.remove('error')
+
+            this.errors.forEach((error, index) => {
+                if(error.elem === "link-input") {
                     this.errors.splice(index, ++index)
                 }
             })
@@ -68,40 +90,50 @@ export default {
 
             this.errors = []
 
-            if(!this.name) {
+            if(!this.item) {
                 this.errors.push({
                     elem: e.target[0].id,
                     value: e.target[0].value,
-                    message: "Name is required"
+                    message: "Item is required"
                 })
             }
 
-            if(this.name.length < 4 || this.name.length > 25) {
+            if(this.item.length < 2 || this.item.length > 30) {
                 this.errors.push({
                     elem: e.target[0].id,
                     value: e.target[0].value,
-                    message: "Name must be 4 to 25 characters long"
+                    message: "Item must be 2 to 30 characters long"
                 })
             }
 
-            if(this.power.length > 0 && (this.power.length < 4 || this.power.length > 25)) {
+            if(this.quantity !== null && typeof this.quantity !== "number") {
                 this.errors.push({
                     elem: e.target[1].id,
                     value: e.target[1].value,
-                    message: "Power must be 4 to 25 characters long"
+                    message: "Quantity must be a number"
                 })
             }
 
             if(this.errors.length === 0)  {
                 axios.post(`${process.env.VUE_APP_LOCAL_API}item`, {
-                    name: this.name
+                    item: this.item,
+                    quantity: this.quantity,
+                    link: this.link
                 })
                 .then(response => {
                     if(response.status === 200) {
                         router.push('/')
                     }
                 })
-                .catch(console.log)
+                .catch(err => {
+                    console.log(err)
+
+                    this.errors.push({
+                        elem: "submit-button",
+                        value: 500,
+                        message: `Error 500: Server Error`
+                    })
+                })
             }
         }
     }
@@ -115,28 +147,29 @@ export default {
     display: flex;
     justify-content: center;
 }
-.isActive {
-    background-color: yellow;
-}
 .input-group {
     margin-bottom: 35px;
+}
+label {
+    color: var(--text-color);
 }
 .input {
     width: 300px;
     display: block;
+    color: var(--text-color);
 }
 .error {
-    border-color: red;
+    border-color: var(--error-red);
 }
 .error:focus {
     outline: none !important;
-    border:2px solid red;
+    border: 2px solid var(--error-red);
 }
 .input-error {
-    color: red;
+    color: var(--error-red);
 }
 button {
-    color: #fff;
-    background-color: rgb(19, 100, 57);
+    color: var(--text-color);
+    background-color: var(--accent-green);
 }
 </style>

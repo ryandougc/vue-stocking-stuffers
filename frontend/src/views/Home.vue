@@ -1,5 +1,5 @@
 <template>
-  <div class="home">
+  <div id="home">
       <Table :data="data" />
   </div>
 </template>
@@ -21,11 +21,12 @@ name: 'Home',
     created() {
         axios.get(`${process.env.VUE_APP_LOCAL_API}item`)
             .then( response => {
-                response.data.forEach( item => {
+                response.data.forEach(stuffer => {
                     this.data.push({
-                        name: this.capitalize(item.name),
-                        power:  this.capitalize(item.name.charAt(3)),
-                        id: item._id
+                        item: this.capitalize(stuffer.item),
+                        quantity: stuffer.quantity,
+                        link: stuffer.link,
+                        id: stuffer._id
                     })
                 })
             })
