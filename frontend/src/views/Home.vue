@@ -46,3 +46,9 @@ name: 'Home',
     }
 }
 </script>
+
+<style scoped>
+#home {
+    width: 100%
+}
+</style>

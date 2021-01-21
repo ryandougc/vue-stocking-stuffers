@@ -1,7 +1,9 @@
 <template>
     <div id="app">
         <div id="title">
-            <h1>🎄 Stocking Stuffer Ideas 🎁</h1>
+            <span>🎄</span>
+            <h1>Stocking Stuffer Ideas</h1>
+            <span>🎁</span>
         </div>
         <div id="nav">
             <router-link to="/">Home</router-link> |
@@ -9,8 +11,11 @@
         </div>
 
         <router-view/>
-    </div>
 
+        <footer>
+            <p id="copyright">© 2021 ryancarr</p>
+        </footer>
+    </div>
 </template>
 
 <style>
@@ -51,23 +56,36 @@ body {
 }
 
 #app {
-    margin-top: 50px;
+    width: 100vw;
+
+    padding-top: 30px;
 }
 
 #title {
+    width: 90%;
+    margin: auto;
+    margin-bottom: 20px;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+
     text-align: center;
     font-size: 2em;
 }
 
 #nav {
+    margin-top: 35px;
+    padding-bottom: 50px;
+
     text-align: center;
-    padding: 30px;
-    margin-bottom: 35px;
 }
 
 #nav a {
+    padding: 0 5px 0 5px;
+
+    color: var(--text-color);
     font-weight: bold;
-    color: var(--text-color)
 }
 
 #nav a:visited {
@@ -76,5 +94,19 @@ body {
 
 #nav a.router-link-exact-active {
     color: var(--accent-green);
+}
+
+#copyright {
+    margin-top: 50px;
+
+    text-align: center;
+    color: var(--text-color);
+}
+
+@media (min-width: 768px) {
+    #app {
+        width: 0%;
+        margin: auto;
+    }
 }
 </style>

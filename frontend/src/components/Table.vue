@@ -12,11 +12,60 @@
 
         <table id="table">
             <thead>
-                <tr>
+                <!-- <tr>
                     <th v-for="column in columns" :key="column">
                         <div class="table-header-content">
                             <p>{{ capitalize(column) }}</p>
                             <div v-if="column !== 'link'" class="icon" :id="column" @click="sort(column)">
+                                <svg fill="none" stroke="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"></path>
+                                </svg>
+                            </div>
+                        </div>
+                    </th>
+                    <th></th>
+                </tr> -->
+                <tr v-if="!isMobile()">
+                    <th>
+                        <div>
+                            <p>{{ capitalize(columns[0]) }}</p>
+                            <div class="icon" :id="columns[0]" @click="sort(columns[0])">
+                                <svg fill="none" stroke="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"></path>
+                                </svg>
+                            </div>
+                        </div>
+                    </th>
+                    <th>
+                        <div>
+                            <p>{{ capitalize(columns[1]) }}</p>
+                            <div class="icon" :id="columns[1]" @click="sort(columns[1])">
+                                <svg fill="none" stroke="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"></path>
+                                </svg>
+                            </div>
+                        </div>
+                    </th>
+                    <th>
+                        <p>{{ columns[2] }}</p>
+                    </th>
+                    <th></th>
+                </tr>
+                <tr v-else-if="isMobile()">
+                    <th>
+                        <div>
+                            <p>{{ capitalize(columns[0]) }}</p>
+                            <div class="icon" :id="columns[0]" @click="sort(columns[0])">
+                                <svg fill="none" stroke="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"></path>
+                                </svg>
+                            </div>
+                        </div>
+                    </th>
+                    <th>
+                        <div>
+                            <p>{{ capitalize(columns[1]) }}</p>
+                            <div class="icon" :id="columns[1]" @click="sort(columns[1])">
                                 <svg fill="none" stroke="currentColor" xmlns="http://www.w3.org/2000/svg">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"></path>
                                 </svg>
@@ -31,7 +80,7 @@
                     <tr v-for="(row, index) in filteredData" :key="`row-${index}`" :id="row.id">
                         <td>{{ parseEscaped(row.item) }}</td>
                         <td>{{ row.quantity }}</td>
-                        <td>
+                        <td v-if="isMobile() == false">
                             <p v-if="row.link == '-'">{{ row.link }}</p>
                             <a v-else :href="row.link">Link</a>
                         </td>
@@ -191,6 +240,7 @@ export default {
             return this.page
         },
         sort(index) {
+            console.log(index)
             // Handle props
             if(this.sortColumn === index) {
                 if(this.sortDirection === 1) {
@@ -205,17 +255,18 @@ export default {
 
             // Handle sort icons
             let sortIcons = document.querySelectorAll('.icon')
+            console.log(sortIcons)
             // Set all icons to the unsorted Icon
             sortIcons.forEach(icon => {
-                icon.innerHTML = '<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"></path></svg>'
+                icon.innerHTML = '<svg style="width: 25px; height: 25px;" fill="none" stroke="currentColor" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"></path></svg>'
             })
 
             if(this.sortDirection === 1) {
                 // Icon for sort in ascending direction
-                document.getElementById(this.sortColumn).innerHTML = `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4h13M3 8h9m-9 4h6m4 0l4-4m0 0l4 4m-4-4v12"></path></svg>`
+                document.getElementById(this.sortColumn).innerHTML = `<svg style="width: 25px; height: 25px;" fill="none" stroke="currentColor" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4h13M3 8h9m-9 4h6m4 0l4-4m0 0l4 4m-4-4v12"></path></svg>`
             }else if(this.sortDirection === -1) {
                 // Icon for sort in descending direction
-                document.getElementById(this.sortColumn).innerHTML = `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4h13M3 8h9m-9 4h9m5-4v12m0 0l-4-4m4 4l4-4"></path></svg>`
+                document.getElementById(this.sortColumn).innerHTML = `<svg style="width: 25px; height: 25px;" fill="none" stroke="currentColor" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4h13M3 8h9m-9 4h9m5-4v12m0 0l-4-4m4 4l4-4"></path></svg>`
             }
 
             // Sort
@@ -249,6 +300,13 @@ export default {
                     }
                 })
                 .catch(console.log)
+        },
+        isMobile() { // Source: https://stackoverflow.com/questions/48515023/display-different-vuejs-components-for-mobile-browsers
+            if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+                return true
+            } else {
+                return false
+            }
         }
     },
     watch: {
@@ -260,6 +318,10 @@ export default {
 </script>
 
 <style scoped>
+svg{
+    width: 25px;
+    height: 25px;
+}
 a {
     color: var(--dark-green);
 }
@@ -274,8 +336,9 @@ a {
     transform: translateX(30px);
 }
 
-svg{
-    cursor: pointer;
+#table-component {
+    width: 95%;
+    margin: auto;
 }
 
 #table-filters {
@@ -290,41 +353,34 @@ svg{
     width: var(--input-width-small);
     padding-left: 25px;
 }
-#table-component {
-    width: 60%;
-    margin: auto;
-}
+
 #table {
     width: 100%;
     border-collapse: collapse;
 }
-#table thead {
+#table thead tr{
     color: var(--text-color);
     background-color: var(--accent-green);
 }
-#table thead th {
-    padding: 20px 35px 10px 35px;
-}
-#table thead th .table-header-content {
+#table thead tr th div{
     display: flex;
+    flex-direction: row;
+    align-items: center;
     justify-content: center;
-    align-items: flex-start;
+    padding: 8px 0 6px 0;
 }
-#table thead th .table-header-content > :first-child {
-    padding-right: 10px;
+#table thead tr th div .icon {
+    margin-left: 6px;
 }
-#table thead th .table-header-content .icon{
+#table thead tr th div .icon > svg{
     width: 25px;
     height: 25px;
-    overflow: hidden;
+
+    cursor: pointer;
 }
 #table tbody {
     border: var(--input-border);
     text-align: center;
-}
-#table tbody svg{
-    width: 25px;
-    height: 25px;
 }
 #table tbody tr td {
     color: var(--text-color);
@@ -336,7 +392,7 @@ svg{
 }
 #pagination {
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
     margin-top: var(--input-group-spacing);
 }
 #pagination button{

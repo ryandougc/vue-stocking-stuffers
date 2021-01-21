@@ -22,7 +22,7 @@ class App {
 
     private initCors(): void {
         this.express.use(cors({
-            origin: process.env.CORS_ADDRESS,
+            origin: [process.env.CORS_ADDRESS, `http://192.168.1.72:8080`],
             optionsSuccessStatus: 200
         }) )
     }
