@@ -1,5 +1,5 @@
 <template>
-    <div id="app">
+    <div id="app-container">
         <div id="title">
             <span>🎄</span>
             <h1>Stocking Stuffer Ideas</h1>
@@ -55,7 +55,7 @@ body {
     background-color: var(--background-light);
 }
 
-#app {
+#app-container {
     width: 100vw;
 
     padding-top: 30px;
@@ -104,8 +104,8 @@ body {
 }
 
 @media (min-width: 768px) {
-    #app {
-        width: 0%;
+    #app-container {
+        width: 60%;
         margin: auto;
     }
 }
