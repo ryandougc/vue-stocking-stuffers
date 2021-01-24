@@ -17,10 +17,8 @@ class App {
         dotenv.config({ path: 'env_variables.env' });
     }
     initCors() {
-        this.express.use(cors({
-            origin: [process.env.CORS_ADDRESS, `http://192.168.1.72:8080`],
-            optionsSuccessStatus: 200
-        }));
+        this.express.use(cors());
+        this.express.options('*', cors());
     }
     initBodyParser() {
         this.express.use(bodyParser.urlencoded({ extended: true }));

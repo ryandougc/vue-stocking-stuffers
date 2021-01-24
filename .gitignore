@@ -1,5 +1,8 @@
 api/node_modules
 api/env_variables.env
+api/dist
 frontend/node_modules
 frontend/.env
 frontend/.env.production
+frontend/dist
+mongo-volume

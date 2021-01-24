@@ -289,7 +289,7 @@ export default {
         },
         deleteItem(item) {
             axios
-                .delete(`${process.env.VUE_APP_LOCAL_API}item/${item}`)
+                .delete(`${process.env.VUE_APP_LOCAL_API}/item/${item}`)
                 .then(response => {
                     if(response.status === 200){
                         this.sortedData.forEach((row, index) => {

@@ -124,7 +124,7 @@ export default {
             }
 
             if(this.errors.length === 0)  {
-                axios.post(`${process.env.VUE_APP_LOCAL_API}item`, {
+                axios.post(`${process.env.VUE_APP_LOCAL_API}/item`, {
                     item: this.item,
                     quantity: this.quantity,
                     link: this.link

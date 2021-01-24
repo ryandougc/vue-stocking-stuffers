@@ -20,7 +20,7 @@ name: 'Home',
         }
     },
     created() {
-        axios.get(`${process.env.VUE_APP_LOCAL_API}item`)
+        axios.get(`${process.env.VUE_APP_LOCAL_API}/item`)
             .then( response => {
                 response.data.forEach(stuffer => {
                     this.data.push({

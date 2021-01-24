@@ -1,24 +1,28 @@
 version: '3'
 services:
-
   stocking-stuffer-api:
-    build: ./api
     container_name: stocking-stuffer-api
+    restart: always
+    build: ./api
+    depends_on:
+      - mongo
     environment:
       - PORT=3000
-      - DB_CONNECTION=mongodb+srv://Ryan:Sportking11@vue-tut.iuu2u.mongodb.net/stocking-stuffers?retryWrites=true&w=majority
+      - MONGO_URL=mongodb://mongo:27017/stocking-stuffer-db
       - SESSION_SECRET=1a256cae-99dc-4a0b-80ee-98141f06d0da
-      - CORS_ADDRESS=http://172.17.0.2:8080
     ports:
       - 3000:3000
-
+  mongo:
+    container_name: mongo
+    image: mongo
+    ports:
+      - 27017:27017
   stocking-stuffer-ui:
-    build: ./frontend
     container_name: stocking-stuffer-ui
-    environment:
-      - VUE_APP_LOCAL_API=stocking-stuffer-api
+    build: ./frontend
+    ports:
+      - 8080:8080
     links:
       - stocking-stuffer-api
-
-volumes:
-  stocking-stuffer-data
+    environment:
+      - VUE_APP_BACKEND_URL=http://stocking-stuffer-api:3000

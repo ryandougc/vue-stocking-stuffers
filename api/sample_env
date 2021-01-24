@@ -1,3 +1,4 @@
-DB_CONNECTION=put database uri here
+PORT=
+MONGO_URL=put database uri here
 SESSION_SECRET=
 CORS_ADDRESS=
